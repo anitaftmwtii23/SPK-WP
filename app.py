@@ -20,7 +20,7 @@ def weighted_product(X, weights, criteria_type, alternatives, criteria):
     X = np.array(X, dtype=float)
     w = np.array(weights, dtype=float)
 
-    # Normalisasi bobot agar jumlah = 1
+    # Normalisasi bobot agar jumlah = 1 (opsional, tapi aman)
     if not np.isclose(w.sum(), 1.0):
         w = w / w.sum()
 
@@ -68,7 +68,7 @@ Aplikasi ini menggunakan metode **Weighted Product (WP)** untuk melakukan perang
 **Langkah penggunaan:**
 1. Siapkan file **Excel** dengan format:
    - Kolom pertama: nama/ID **Alternatif**
-   - Kolom berikutnya: nilai-nilai **kriteria**
+   - Kolom berikutnya: nilai-nilai **kriteria** (angka).
 2. Upload file Excel.
 3. Masukkan **bobot** dan **tipe kriteria** (benefit/cost) sesuai urutan kolom kriteria.
 4. Klik tombol **Proses SPK** untuk melihat hasil perangkingan.
@@ -157,21 +157,18 @@ if proses:
         st.markdown("### Hasil Perhitungan & Perangkingan (Metode WP)")
         st.dataframe(hasil_wp, use_container_width=True)
 
-        # Download hasil sebagai Excel
-
+        # -----------------------------------------
+        # SIMPAN / DOWNLOAD EXCEL HASIL WP 
+        # -----------------------------------------
         buffer = BytesIO()
-
-        # Tulis dataframe ke buffer Excel
         hasil_wp.to_excel(buffer, index=False, sheet_name="Hasil_WP")
         buffer.seek(0)
 
+        st.download_button(
+            label="💾 Download Hasil dalam Excel",
+            data=buffer,
+            file_name="hasil_spk_wp.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
 
-st.download_button(
-    label="💾 Download Hasil dalam Excel",
-    data=buffer,
-    file_name="hasil_spk_wp.xlsx",
-    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-)   
-
-
-st.success("Perhitungan SPK dengan metode Weighted Product selesai.")
+        st.success("Perhitungan SPK dengan metode Weighted Product selesai.")
